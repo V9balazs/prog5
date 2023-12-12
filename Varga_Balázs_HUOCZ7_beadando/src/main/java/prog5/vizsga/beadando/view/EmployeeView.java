@@ -32,29 +32,12 @@ public class EmployeeView extends VerticalLayout {
         grid = new Grid<>(JobOpportunity.class);
         grid.setSizeFull();
         grid.setColumns("id", "description", "place");
-        grid.addComponentColumn(this::createApplyButton).setHeader("Actions");
     }
 
-    private Button createApplyButton(JobOpportunity jobOpportunity) {
-        Button applyButton = new Button("Jelentkezés", click -> applyForJob(jobOpportunity));
-        applyButton.setEnabled(!isCurrentUserApplied(jobOpportunity));
-        return applyButton;
-    }
-
-    private void applyForJob(JobOpportunity jobOpportunity) {
-        jobService.applyForJob(jobOpportunity.getId(), getCurrentEmployeeUsername());
-        updateList();
-    }
-
-    private boolean isCurrentUserApplied(JobOpportunity jobOpportunity) {
-        String currentUsername = getCurrentEmployeeUsername();
-        return jobOpportunity.getApplicant() != null && jobOpportunity.getApplicant().equals(currentUsername);
-    }
-
-    private String getCurrentEmployeeUsername() {
+    /*private String getCurrentEmployeeUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
-    }
+    }*/
 
     private void updateList() {
         grid.setItems(jobService.getAllJobOpportunities());

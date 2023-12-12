@@ -70,12 +70,10 @@ public class WorkView extends VerticalLayout {
     }
 
     private boolean checkIfUserIsManager() {
-        // Implementáld a logikát, ami eldönti, hogy a jelenlegi felhasználó manager-e
-        return false; // Ideiglenes érték
+        return false;
     }
 
     private String getCurrentEmployeeUsername() {
-        // Visszaadja a jelenlegi bejelentkezett alkalmazott felhasználónevét
-        return "employeeUsername"; // Ideiglenes érték
+        return "employeeUsername";
     }
 }

@@ -56,7 +56,7 @@ public class WorkView extends VerticalLayout {
     }
 
     private void applyForJob(JobOpportunity jobOpportunity) {
-        jobService.applyForJob(jobOpportunity.getId(), getCurrentEmployeeUsername());
+        jobService.applyForJob(jobOpportunity.getId(), getCurrentUsername());
         updateList();
     }
 
@@ -73,7 +73,7 @@ public class WorkView extends VerticalLayout {
         return false;
     }
 
-    private String getCurrentEmployeeUsername() {
+    private String getCurrentUsername() {
         return "employeeUsername";
     }
 }

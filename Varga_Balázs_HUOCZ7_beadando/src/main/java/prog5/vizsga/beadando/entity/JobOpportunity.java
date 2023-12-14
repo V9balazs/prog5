@@ -16,6 +16,11 @@ public class JobOpportunity {
     public JobOpportunity() {
     }
 
+    public JobOpportunity(String place, String description) {
+        this.place = place;
+        this.description = description;
+    }
+
     public String getId() {
         return id;
     }

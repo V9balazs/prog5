@@ -12,11 +12,15 @@ import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinServletRequest;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import prog5.vizsga.beadando.service.SecurityService;
 
 
 public class MainLayout extends AppLayout {
+    private final SecurityService securityService;
 
-    public MainLayout() {
+
+    public MainLayout(SecurityService securityService) {
+        this.securityService = securityService;
         createHeader();
         createDrawer();
     }
@@ -25,7 +29,7 @@ public class MainLayout extends AppLayout {
         H1 logo = new H1("My Application");
         logo.addClassNames("text-l", "m-m");
 
-        Button logoutButton = new Button("Logout", e -> logout());
+        Button logoutButton = new Button("Logout", e -> securityService.logout());
 
         HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, logoutButton);
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);

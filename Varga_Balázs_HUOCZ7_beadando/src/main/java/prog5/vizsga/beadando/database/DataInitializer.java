@@ -9,7 +9,7 @@ import prog5.vizsga.beadando.repository.JobOpportunityRepository;
 @Configuration
 public class DataInitializer {
 
-    @Bean
+    /*@Bean
     CommandLineRunner initDatabase(JobOpportunityRepository repository) {
         return args -> {
             // Kezdő adatok létrehozása
@@ -17,5 +17,5 @@ public class DataInitializer {
             repository.save(new JobOpportunity("Pécs", "Manuális tesztelő"));
             // További adatok hozzáadása...
         };
-    }
+    }*/
 }

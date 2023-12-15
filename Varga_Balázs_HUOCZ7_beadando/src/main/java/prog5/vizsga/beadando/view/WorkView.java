@@ -4,10 +4,15 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import prog5.vizsga.beadando.entity.JobOpportunity;
 import prog5.vizsga.beadando.service.JobService;
 
@@ -23,6 +28,8 @@ public class WorkView extends VerticalLayout {
     public WorkView(JobService jobService) {
         this.jobService = jobService;
         isManager = checkIfUserIsManager();
+
+        add(new Span("Bejelentkezve: " + getCurrentUsername()));
 
         setSizeFull();
         configureGrid();
@@ -50,6 +57,17 @@ public class WorkView extends VerticalLayout {
         }
     }
 
+    private String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return userDetails.getUsername();
+        }
+        else{
+            return "Ismeretlen";
+        }
+    }
+
     private void deleteJobOpportunity(JobOpportunity jobOpportunity) {
         jobService.deleteJobOpportunity(jobOpportunity.getId());
         updateList();
@@ -71,9 +89,5 @@ public class WorkView extends VerticalLayout {
 
     private boolean checkIfUserIsManager() {
         return false;
-    }
-
-    private String getCurrentUsername() {
-        return "employeeUsername";
     }
 }

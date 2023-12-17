@@ -5,6 +5,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -15,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import prog5.vizsga.beadando.entity.JobOpportunity;
 import prog5.vizsga.beadando.service.JobService;
+
+import java.util.stream.Collectors;
 
 @Route(value = "work", layout = MainLayout.class)
 @PageTitle("Work Opportunities")
@@ -43,17 +47,28 @@ public class WorkView extends VerticalLayout {
     private void configureGrid() {
         grid = new Grid<>(JobOpportunity.class, false);
         grid.setSizeFull();
-        grid.addColumn(JobOpportunity::getDescription).setHeader("Leírás");
-        grid.addColumn(JobOpportunity::getPlace).setHeader("Helyszín");
-        grid.addColumn(JobOpportunity::getApplicant).setHeader("Jelentkező");
-        grid.addComponentColumn(jobOpportunity -> createActionButton(jobOpportunity)).setHeader("Műveletek");
+
+
+        if (isManager) {
+            grid.addColumn(JobOpportunity::getId).setHeader("ID");
+        }
+        grid.addColumn(JobOpportunity::getDescription).setHeader("Description");
+        grid.addColumn(JobOpportunity::getPlace).setHeader("Location");
+        grid.addColumn(JobOpportunity::getApplicant).setHeader("Applicant");
+        grid.addComponentColumn(jobOpportunity -> createActionButton(jobOpportunity)).setHeader("Actions");
     }
 
-    private Button createActionButton(JobOpportunity jobOpportunity) {
+    private HorizontalLayout createActionButton(JobOpportunity jobOpportunity) {
+        HorizontalLayout layout = new HorizontalLayout();
         if (isManager) {
-            return new Button("Törlés", click -> deleteJobOpportunity(jobOpportunity));
+            Button deleteButton = new Button("Delete", click -> deleteJobOpportunity(jobOpportunity));
+            Button acceptButton = new Button("Accept", click -> acceptJobOpportunity(jobOpportunity));
+            layout.add(acceptButton, deleteButton);
+            return layout;
         } else {
-            return new Button("Jelentkezés", click -> applyForJob(jobOpportunity));
+            Button applyButton = new Button("Apply", click -> applyForJob(jobOpportunity));
+            layout.add(applyButton);
+            return layout;
         }
     }
 
@@ -64,7 +79,7 @@ public class WorkView extends VerticalLayout {
             return userDetails.getUsername();
         }
         else{
-            return "Ismeretlen";
+            return "Unknown";
         }
     }
 
@@ -79,15 +94,31 @@ public class WorkView extends VerticalLayout {
     }
 
     private void addNewJobOpportunityButton() {
-        Button newJobButton = new Button("Új Munkalehetőség", click -> UI.getCurrent().navigate(NewWorkView.class));
+        Button newJobButton = new Button("New Work", click -> UI.getCurrent().navigate(NewWorkView.class));
         add(newJobButton);
     }
 
+    private void acceptJobOpportunity(JobOpportunity jobOpportunity) {
+        if (jobOpportunity.getApplicant() == null || jobOpportunity.getApplicant().isEmpty()) {
+            Notification.show("No applicant present.", 3000, Notification.Position.MIDDLE);
+            return;
+        }
+
+        jobService.acceptJobOpportunity(jobOpportunity.getId());
+        updateList();
+    }
+
     private void updateList() {
-        grid.setItems(jobService.getAllJobOpportunities());
+            grid.setItems(jobService.getAllJobOpportunities().stream()
+                    .filter(jobOpportunity -> !jobOpportunity.isAccepted())
+                    .collect(Collectors.toList()));
     }
 
     private boolean checkIfUserIsManager() {
-        return false;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return false;
+        }
+        return authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_MANAGER"));
     }
 }

@@ -33,15 +33,15 @@ public class NewWorkView extends VerticalLayout {
     private FormLayout createFormLayout() {
         FormLayout formLayout = new FormLayout();
 
-        descriptionField = new TextField("Leírás");
-        placeField = new TextField("Helyszín");
+        descriptionField = new TextField("Description");
+        placeField = new TextField("Location");
 
         formLayout.add(descriptionField, placeField);
         return formLayout;
     }
 
     private Button createSaveButton() {
-        Button saveButton = new Button("Mentés", click -> saveJobOpportunity());
+        Button saveButton = new Button("Save", click -> saveJobOpportunity());
         saveButton.addClassName("save-button");
         return saveButton;
     }

@@ -42,5 +42,20 @@ public class JobService {
             jobOpportunityRepository.save(job);
         });
     }
+
+    public void acceptJobOpportunity(String jobOpportunityId) {
+        Optional<JobOpportunity> jobOpportunityOptional = jobOpportunityRepository.findById(jobOpportunityId);
+        JobOpportunity jobOpportunity = jobOpportunityOptional.get();
+        jobOpportunity.setAccepted(true);
+        jobOpportunityRepository.save(jobOpportunity);
+    }
+
+    public void cancelApplication(String jobOpportunityId) {
+        Optional<JobOpportunity> jobOpportunityOptional = jobOpportunityRepository.findById(jobOpportunityId);
+        JobOpportunity jobOpportunity = jobOpportunityOptional.get();
+        jobOpportunity.setApplicant(null);
+        jobOpportunityRepository.save(jobOpportunity);
+
+    }
 }
 

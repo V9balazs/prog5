@@ -46,7 +46,7 @@ public class SecurityConfig extends VaadinWebSecurity {
                         .passwordEncoder(passwordEncoder::encode)
                         .build(),
                 User.withUsername("EmployeeC")
-                        .password("employeec")
+                        .password("employeeC")
                         .roles("EMPLOYEE")
                         .passwordEncoder(passwordEncoder::encode)
                         .build(),

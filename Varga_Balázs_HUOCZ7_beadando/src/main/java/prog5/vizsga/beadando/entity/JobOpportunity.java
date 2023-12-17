@@ -11,6 +11,7 @@ public class JobOpportunity {
     private String description;
     private String place;
     private String applicant;
+    private boolean accepted = false;
 
 
     public JobOpportunity() {
@@ -19,6 +20,14 @@ public class JobOpportunity {
     public JobOpportunity(String place, String description) {
         this.place = place;
         this.description = description;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 
     public String getId() {

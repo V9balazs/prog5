@@ -1,0 +1,11 @@
+.small-logo {
+    font-size: 1.5em;
+    margin: 0;
+    padding: 0.5em;
+}
+
+.logout-button {
+    margin-right: 1%;
+    background-color: red;
+    color: white;
+}

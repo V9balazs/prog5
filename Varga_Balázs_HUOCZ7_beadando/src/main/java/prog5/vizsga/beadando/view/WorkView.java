@@ -33,7 +33,7 @@ public class WorkView extends VerticalLayout {
         this.jobService = jobService;
         isManager = checkIfUserIsManager();
 
-        add(new Span("Bejelentkezve: " + getCurrentUsername()));
+        add(new Span("Logged in: " + getCurrentUsername()));
 
         setSizeFull();
         configureGrid();
@@ -62,8 +62,9 @@ public class WorkView extends VerticalLayout {
         HorizontalLayout layout = new HorizontalLayout();
         if (isManager) {
             Button deleteButton = new Button("Delete", click -> deleteJobOpportunity(jobOpportunity));
+            Button cancelButton = new Button("Cancel", click -> cancelApplication(jobOpportunity));
             Button acceptButton = new Button("Accept", click -> acceptJobOpportunity(jobOpportunity));
-            layout.add(acceptButton, deleteButton);
+            layout.add(acceptButton, cancelButton, deleteButton);
             return layout;
         } else {
             Button applyButton = new Button("Apply", click -> applyForJob(jobOpportunity));
@@ -112,6 +113,11 @@ public class WorkView extends VerticalLayout {
             grid.setItems(jobService.getAllJobOpportunities().stream()
                     .filter(jobOpportunity -> !jobOpportunity.isAccepted())
                     .collect(Collectors.toList()));
+    }
+
+    private void cancelApplication(JobOpportunity jobOpportunity) {
+        jobService.cancelApplication(jobOpportunity.getId());
+        updateList();
     }
 
     private boolean checkIfUserIsManager() {

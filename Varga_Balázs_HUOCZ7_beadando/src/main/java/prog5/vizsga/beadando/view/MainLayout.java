@@ -4,6 +4,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -14,7 +15,7 @@ import com.vaadin.flow.server.VaadinServletRequest;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import prog5.vizsga.beadando.service.SecurityService;
 
-
+@CssImport("./styles/styles.css")
 public class MainLayout extends AppLayout {
     private final SecurityService securityService;
 
@@ -26,15 +27,18 @@ public class MainLayout extends AppLayout {
     }
 
     private void createHeader() {
-        H1 logo = new H1("My Application");
-        logo.addClassNames("text-l", "m-m");
+        H1 logo = new H1("Foreign work management");
+        logo.addClassName("small-logo");
 
         Button logoutButton = new Button("Logout", e -> securityService.logout());
+        logoutButton.addClassName("logout-button");
 
-        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, logoutButton);
+        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo);
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.setWidth("100%");
-        header.addClassNames("py-0", "px-m");
+
+        header.addAndExpand(logo);
+        header.add(logoutButton);
 
         addToNavbar(header);
     }

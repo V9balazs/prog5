@@ -47,13 +47,18 @@ public class NewWorkView extends VerticalLayout {
     }
 
     private void saveJobOpportunity() {
+        if (descriptionField.isEmpty() || placeField.isEmpty()) {
+            Notification.show("Please fill out every field!", 3000, Notification.Position.MIDDLE);
+            return;
+        }
+
         JobOpportunity newJob = new JobOpportunity();
         newJob.setDescription(descriptionField.getValue());
         newJob.setPlace(placeField.getValue());
 
         jobService.createOrUpdateJobOpportunity(newJob);
 
-        Notification.show("Munkalehetőség mentve.");
+        Notification.show("New work saved!");
         descriptionField.clear();
         placeField.clear();
     }

@@ -1,5 +1,6 @@
 package prog5.vizsga.beadando.view;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -19,9 +20,10 @@ import java.util.Collection;
 @Route("login")
 @PageTitle("Login")
 @AnonymousAllowed
-public class LoginView extends VerticalLayout implements BeforeEnterObserver {
+public class LoginView extends VerticalLayout {
 
     private final SecurityService securityService;
+    private final LoginForm loginForm = new LoginForm();
 
     @Autowired
     public LoginView(SecurityService securityService) {
@@ -32,13 +34,22 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         setJustifyContentMode(JustifyContentMode.CENTER);
 
         H1 title = new H1("Bejelentkezés");
-        LoginForm loginForm = new LoginForm();
         loginForm.setAction("login");
 
         add(title, loginForm);
     }
 
-    @Override
+    /*@Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        if (event.getLocation()
+                .getQueryParameters()
+                .getParameters()
+                .containsKey("error")) {
+            this.loginForm.setError(true);
+        }
+    }*/
+
+    /*@Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         UserDetails user = securityService.getAuthenticatedUser();
         if (user != null) {
@@ -49,5 +60,5 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
                 beforeEnterEvent.forwardTo(EmployeeView.class);
             }
         }
-    }
+    }*/
 }

@@ -1,6 +1,5 @@
 package prog5.vizsga.beadando.view;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -10,9 +9,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import prog5.vizsga.beadando.service.SecurityService;
 
 import java.util.Collection;
@@ -20,7 +16,7 @@ import java.util.Collection;
 @Route("login")
 @PageTitle("Login")
 @AnonymousAllowed
-public class LoginView extends VerticalLayout {
+public class LoginView extends VerticalLayout implements BeforeEnterObserver{
 
     private final SecurityService securityService;
     private final LoginForm loginForm = new LoginForm();
@@ -39,7 +35,7 @@ public class LoginView extends VerticalLayout {
         add(title, loginForm);
     }
 
-    /*@Override
+    @Override
     public void beforeEnter(BeforeEnterEvent event) {
         if (event.getLocation()
                 .getQueryParameters()
@@ -47,18 +43,5 @@ public class LoginView extends VerticalLayout {
                 .containsKey("error")) {
             this.loginForm.setError(true);
         }
-    }*/
-
-    /*@Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        UserDetails user = securityService.getAuthenticatedUser();
-        if (user != null) {
-            Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-            if (authorities.contains(new SimpleGrantedAuthority("MANAGER"))) {
-                beforeEnterEvent.forwardTo(WorkView.class);
-            } else if (authorities.contains(new SimpleGrantedAuthority("EMPLOYEE"))) {
-                beforeEnterEvent.forwardTo(EmployeeView.class);
-            }
-        }
-    }*/
+    }
 }

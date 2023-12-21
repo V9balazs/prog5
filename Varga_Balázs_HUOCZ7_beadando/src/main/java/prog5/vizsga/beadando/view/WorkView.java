@@ -90,6 +90,11 @@ public class WorkView extends VerticalLayout {
     }
 
     private void applyForJob(JobOpportunity jobOpportunity) {
+        if (jobOpportunity.getApplicant() != null && !jobOpportunity.getApplicant().isEmpty()) {
+            Notification.show("This job already has an applicant.", 3000, Notification.Position.MIDDLE);
+            return;
+        }
+
         jobService.applyForJob(jobOpportunity.getId(), getCurrentUsername());
         updateList();
     }

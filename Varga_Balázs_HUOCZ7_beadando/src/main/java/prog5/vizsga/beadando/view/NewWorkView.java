@@ -7,13 +7,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import prog5.vizsga.beadando.entity.JobOpportunity;
 import prog5.vizsga.beadando.service.JobService;
 
 @Route(value = "new-work", layout = MainLayout.class)
 @PageTitle("New Work")
-@PermitAll
+@RolesAllowed("MANAGER")
 public class NewWorkView extends VerticalLayout {
 
     private final JobService jobService;

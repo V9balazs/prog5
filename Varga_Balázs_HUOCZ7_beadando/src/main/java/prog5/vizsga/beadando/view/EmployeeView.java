@@ -2,6 +2,7 @@ package prog5.vizsga.beadando.view;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -38,7 +39,7 @@ public class EmployeeView extends VerticalLayout {
         } else {
             configureAppliedGrid();
             configureAcceptedGrid();
-            add(appliedGrid, acceptedGrid);
+            add(new H3("Applied for"), appliedGrid, new H3("Accepted Jobs"), acceptedGrid);
         }
 
         updateLists();

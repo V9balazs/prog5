@@ -9,15 +9,18 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.HighlightConditions;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinServletRequest;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import prog5.vizsga.beadando.service.SecurityService;
 
 @CssImport("./styles/styles.css")
-public class MainLayout extends AppLayout {
+public class MainLayout extends AppLayout implements AfterNavigationObserver {
     private final SecurityService securityService;
+    private RouterLink listLink;
+    private RouterLink employeeLink;
 
 
     public MainLayout(SecurityService securityService) {
@@ -36,6 +39,7 @@ public class MainLayout extends AppLayout {
         HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo);
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.setWidth("100%");
+        header.addClassName("header");
 
         header.addAndExpand(logo);
         header.add(logoutButton);
@@ -44,15 +48,24 @@ public class MainLayout extends AppLayout {
     }
 
     private void createDrawer() {
-        RouterLink listLink = new RouterLink("Job Opportunities", WorkView.class);
-        listLink.setHighlightCondition(HighlightConditions.sameLocation());
-
-        RouterLink employeeLink = new RouterLink("Employee Dashboard", EmployeeView.class);
+        listLink = new RouterLink("Job Opportunities", WorkView.class);
+        employeeLink = new RouterLink("Employee Dashboard", EmployeeView.class);
 
         addToDrawer(new VerticalLayout(
                 listLink,
                 employeeLink
         ));
+    }
+
+    @Override
+    public void afterNavigation(AfterNavigationEvent event) {
+        boolean isWorkView = event.getActiveChain().stream()
+                .anyMatch(component -> component.getClass().equals(WorkView.class));
+        boolean isEmployeeView = event.getActiveChain().stream()
+                .anyMatch(component -> component.getClass().equals(EmployeeView.class));
+
+        listLink.getElement().getClassList().set("active", isWorkView);
+        employeeLink.getElement().getClassList().set("active", isEmployeeView);
     }
 
     private void logout() {

@@ -9,3 +9,8 @@
     background-color: red;
     color: white;
 }
+
+.active {
+    color: #0015ff;
+    font-weight: bold;
+}

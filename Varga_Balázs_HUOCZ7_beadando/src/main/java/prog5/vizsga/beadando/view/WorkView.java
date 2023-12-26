@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
@@ -18,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import prog5.vizsga.beadando.entity.JobOpportunity;
 import prog5.vizsga.beadando.service.JobService;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Route(value = "work", layout = MainLayout.class)
@@ -28,6 +30,8 @@ public class WorkView extends VerticalLayout {
     private final JobService jobService;
     private Grid<JobOpportunity> grid;
     private boolean isManager;
+    private TextField descriptionFilter;
+    private TextField locationFilter;
 
     public WorkView(JobService jobService) {
         this.jobService = jobService;
@@ -36,6 +40,7 @@ public class WorkView extends VerticalLayout {
         add(new Span("Logged in: " + getCurrentUsername()));
 
         setSizeFull();
+        add(createFilterLayout());
         configureGrid();
         add(grid);
         if (isManager) {
@@ -71,6 +76,19 @@ public class WorkView extends VerticalLayout {
             layout.add(applyButton);
             return layout;
         }
+    }
+
+    private HorizontalLayout createFilterLayout() {
+        descriptionFilter = new TextField();
+        descriptionFilter.setPlaceholder("Filter by Description");
+
+        locationFilter = new TextField();
+        locationFilter.setPlaceholder("Filter by Location");
+
+        Button filterButton = new Button("Search", click -> updateList());
+
+        HorizontalLayout filterLayout = new HorizontalLayout(descriptionFilter, locationFilter, filterButton);
+        return filterLayout;
     }
 
     private String getCurrentUsername() {
@@ -115,9 +133,16 @@ public class WorkView extends VerticalLayout {
     }
 
     private void updateList() {
-            grid.setItems(jobService.getAllJobOpportunities().stream()
-                    .filter(jobOpportunity -> !jobOpportunity.isAccepted())
-                    .collect(Collectors.toList()));
+        String descriptionFilterValue = descriptionFilter.getValue().toLowerCase();
+        String locationFilterValue = locationFilter.getValue().toLowerCase();
+
+        List<JobOpportunity> filteredJobs = jobService.getAllJobOpportunities().stream()
+                .filter(job -> !job.isAccepted())
+                .filter(job -> job.getDescription().toLowerCase().contains(descriptionFilterValue))
+                .filter(job -> job.getPlace().toLowerCase().contains(locationFilterValue))
+                .collect(Collectors.toList());
+
+        grid.setItems(filteredJobs);
     }
 
     private void cancelApplication(JobOpportunity jobOpportunity) {

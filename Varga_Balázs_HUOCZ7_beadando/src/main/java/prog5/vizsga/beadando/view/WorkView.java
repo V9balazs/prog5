@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import prog5.vizsga.beadando.entity.JobOpportunity;
+import prog5.vizsga.beadando.helper.ViewHelper;
 import prog5.vizsga.beadando.service.JobService;
 
 import java.util.List;
@@ -35,9 +36,9 @@ public class WorkView extends VerticalLayout {
 
     public WorkView(JobService jobService) {
         this.jobService = jobService;
-        isManager = checkIfUserIsManager();
+        isManager = ViewHelper.checkIfUserIsManager();
 
-        add(new Span("Logged in: " + getCurrentUsername()));
+        add(new Span("Logged in: " + ViewHelper.getCurrentUsername()));
 
         setSizeFull();
         add(createFilterLayout());
@@ -91,17 +92,6 @@ public class WorkView extends VerticalLayout {
         return filterLayout;
     }
 
-    private String getCurrentUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return userDetails.getUsername();
-        }
-        else{
-            return "Unknown";
-        }
-    }
-
     private void deleteJobOpportunity(JobOpportunity jobOpportunity) {
         jobService.deleteJobOpportunity(jobOpportunity.getId());
         updateList();
@@ -109,11 +99,11 @@ public class WorkView extends VerticalLayout {
 
     private void applyForJob(JobOpportunity jobOpportunity) {
         if (jobOpportunity.getApplicant() != null && !jobOpportunity.getApplicant().isEmpty()) {
-            Notification.show("This job already has an applicant.", 3000, Notification.Position.MIDDLE);
+            ViewHelper.showNotification("This job already has an applicant.");
             return;
         }
 
-        jobService.applyForJob(jobOpportunity.getId(), getCurrentUsername());
+        jobService.applyForJob(jobOpportunity.getId(), ViewHelper.getCurrentUsername());
         updateList();
     }
 
@@ -148,13 +138,5 @@ public class WorkView extends VerticalLayout {
     private void cancelApplication(JobOpportunity jobOpportunity) {
         jobService.cancelApplication(jobOpportunity.getId());
         updateList();
-    }
-
-    private boolean checkIfUserIsManager() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return false;
-        }
-        return authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_MANAGER"));
     }
 }

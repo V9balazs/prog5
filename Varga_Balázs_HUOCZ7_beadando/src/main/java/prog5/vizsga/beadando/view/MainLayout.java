@@ -67,11 +67,4 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         listLink.getElement().getClassList().set("active", isWorkView);
         employeeLink.getElement().getClassList().set("active", isEmployeeView);
     }
-
-    private void logout() {
-        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-        logoutHandler.logout(VaadinServletRequest.getCurrent().getHttpServletRequest(), null, null);
-        UI.getCurrent().navigate("");
-        UI.getCurrent().getPage().reload();
-    }
 }

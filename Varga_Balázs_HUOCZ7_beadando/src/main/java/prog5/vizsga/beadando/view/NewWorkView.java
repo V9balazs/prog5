@@ -9,6 +9,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 import prog5.vizsga.beadando.entity.JobOpportunity;
+import prog5.vizsga.beadando.helper.ViewHelper;
 import prog5.vizsga.beadando.service.JobService;
 
 @Route(value = "new-work", layout = MainLayout.class)
@@ -48,7 +49,7 @@ public class NewWorkView extends VerticalLayout {
 
     private void saveJobOpportunity() {
         if (descriptionField.isEmpty() || placeField.isEmpty()) {
-            Notification.show("Please fill out every field!", 3000, Notification.Position.MIDDLE);
+            ViewHelper.showNotification("Please fill out every field!");
             return;
         }
 
@@ -58,7 +59,7 @@ public class NewWorkView extends VerticalLayout {
 
         jobService.createOrUpdateJobOpportunity(newJob);
 
-        Notification.show("New work saved!");
+        ViewHelper.showNotification("New work saved!");
         descriptionField.clear();
         placeField.clear();
     }

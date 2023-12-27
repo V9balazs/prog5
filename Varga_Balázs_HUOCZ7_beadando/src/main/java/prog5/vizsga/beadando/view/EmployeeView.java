@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import prog5.vizsga.beadando.entity.JobOpportunity;
+import prog5.vizsga.beadando.helper.ViewHelper;
 import prog5.vizsga.beadando.service.JobService;
 
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class EmployeeView extends VerticalLayout {
         this.jobService = jobService;
         boolean isManager = checkIfUserIsManager();
 
-        add(new Span("Logged in: " + getCurrentUsername()));
+        add(new Span("Logged in: " + ViewHelper.getCurrentUsername()));
         setSizeFull();
 
         if (isManager) {
@@ -71,17 +72,6 @@ public class EmployeeView extends VerticalLayout {
         managerGrid.addColumn(JobOpportunity::getApplicant).setHeader("Accepted");
     }
 
-    private String getCurrentUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return userDetails.getUsername();
-        }
-        else{
-            return "Unknown";
-        }
-    }
-
     private Button createCancelButton(JobOpportunity jobOpportunity) {
         return new Button("Cancel", click -> cancelApplication(jobOpportunity));
     }
@@ -92,7 +82,7 @@ public class EmployeeView extends VerticalLayout {
     }
 
     private void updateLists() {
-        String currentUsername = getCurrentUsername();
+        String currentUsername = ViewHelper.getCurrentUsername();
         if (checkIfUserIsManager()) {
             managerGrid.setItems(jobService.getAllJobOpportunities().stream()
                     .filter(JobOpportunity::isAccepted)

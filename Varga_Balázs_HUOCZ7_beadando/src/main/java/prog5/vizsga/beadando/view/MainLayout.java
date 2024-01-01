@@ -1,6 +1,5 @@
 package prog5.vizsga.beadando.view;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -12,8 +11,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.VaadinServletRequest;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import prog5.vizsga.beadando.service.SecurityService;
 
 @CssImport("./styles/styles.css")

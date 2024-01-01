@@ -11,8 +11,6 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import prog5.vizsga.beadando.service.SecurityService;
 
-import java.util.Collection;
-
 @Route("login")
 @PageTitle("Login")
 @AnonymousAllowed

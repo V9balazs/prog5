@@ -9,13 +9,13 @@ import prog5.vizsga.beadando.repository.JobOpportunityRepository;
 @Configuration
 public class DataInitializer {
 
-    /*@Bean
+    @Bean
     CommandLineRunner initDatabase(JobOpportunityRepository repository) {
         return args -> {
-            // Kezdő adatok létrehozása
-            repository.save(new JobOpportunity("Budapest", "Java fejlesztő"));
-            repository.save(new JobOpportunity("Pécs", "Manuális tesztelő"));
-            // További adatok hozzáadása...
+            repository.save(new JobOpportunity("New York", "Java alkalmazás készítés"));
+            repository.save(new JobOpportunity("London", "Manuális tesztelés"));
+            repository.save(new JobOpportunity("Berlin", "Weboldal fejlesztés"));
+            repository.save(new JobOpportunity("Bécs", "Web alkalmazás készítés"));
         };
-    }*/
+    }
 }

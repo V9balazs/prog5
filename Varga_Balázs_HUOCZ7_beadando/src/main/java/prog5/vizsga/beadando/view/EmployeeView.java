@@ -25,10 +25,11 @@ public class EmployeeView extends VerticalLayout {
     private Grid<JobOpportunity> appliedGrid;
     private Grid<JobOpportunity> acceptedGrid;
     private Grid<JobOpportunity> managerGrid;
+    private boolean isManager;
 
     public EmployeeView(JobService jobService) {
         this.jobService = jobService;
-        boolean isManager = checkIfUserIsManager();
+        isManager = ViewHelper.checkIfUserIsManager();
 
         add(new Span("Logged in: " + ViewHelper.getCurrentUsername()));
         setSizeFull();
@@ -80,28 +81,33 @@ public class EmployeeView extends VerticalLayout {
         updateLists();
     }
 
+    private String extractUsernameFromApplicant(String applicant) {
+        if (applicant != null && applicant.contains(" (")) {
+            return applicant.substring(0, applicant.indexOf(" ("));
+        }
+        return null;
+    }
+
     private void updateLists() {
         String currentUsername = ViewHelper.getCurrentUsername();
-        if (checkIfUserIsManager()) {
+        if (isManager) {
             managerGrid.setItems(jobService.getAllJobOpportunities().stream()
                     .filter(JobOpportunity::isAccepted)
                     .collect(Collectors.toList()));
         } else {
             appliedGrid.setItems(jobService.getAllJobOpportunities().stream()
-                    .filter(job -> job.getApplicant() != null && job.getApplicant().equals(currentUsername) && !job.isAccepted())
+                    .filter(job -> job.getApplicant() != null &&
+                            extractUsernameFromApplicant(job.getApplicant()) != null &&
+                            extractUsernameFromApplicant(job.getApplicant()).equals(currentUsername) &&
+                            !job.isAccepted())
                     .collect(Collectors.toList()));
             acceptedGrid.setItems(jobService.getAllJobOpportunities().stream()
-                    .filter(job -> job.getApplicant() != null && job.getApplicant().equals(currentUsername) && job.isAccepted())
+                    .filter(job -> job.getApplicant() != null &&
+                            extractUsernameFromApplicant(job.getApplicant()) != null &&
+                            extractUsernameFromApplicant(job.getApplicant()).equals(currentUsername) &&
+                            job.isAccepted())
                     .collect(Collectors.toList()));
         }
-    }
-
-    private boolean checkIfUserIsManager() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return false;
-        }
-        return authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_MANAGER"));
     }
 
 }

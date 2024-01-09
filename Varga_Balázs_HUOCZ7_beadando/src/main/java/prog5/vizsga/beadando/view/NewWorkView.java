@@ -1,19 +1,20 @@
 package prog5.vizsga.beadando.view;
 
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import jakarta.annotation.security.RolesAllowed;
+import jakarta.annotation.security.PermitAll;
 import prog5.vizsga.beadando.entity.JobOpportunity;
 import prog5.vizsga.beadando.helper.ViewHelper;
 import prog5.vizsga.beadando.service.JobService;
 
 @Route(value = "new-work", layout = MainLayout.class)
 @PageTitle("New Work")
-@RolesAllowed("MANAGER")
+@PermitAll
 public class NewWorkView extends VerticalLayout {
 
     private final JobService jobService;
@@ -23,11 +24,15 @@ public class NewWorkView extends VerticalLayout {
 
     public NewWorkView(JobService jobService) {
         this.jobService = jobService;
-        addClassName("new-work-view");
-        setSizeFull();
+        if (ViewHelper.checkIfUserIsManager()) {
+            addClassName("new-work-view");
+            setSizeFull();
 
-        add(createFormLayout());
-        add(createSaveButton());
+            add(createFormLayout());
+            add(createSaveButton());
+        } else {
+            add(new Text("Access Denied"));
+        }
     }
 
     private FormLayout createFormLayout() {

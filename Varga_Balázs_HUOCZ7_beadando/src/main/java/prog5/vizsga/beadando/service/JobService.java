@@ -7,8 +7,6 @@ import java.util.List;
 import prog5.vizsga.beadando.entity.JobOpportunity;
 import prog5.vizsga.beadando.repository.JobOpportunityRepository;
 
-import java.util.Optional;
-
 @Service
 public class JobService {
 
@@ -20,12 +18,11 @@ public class JobService {
     }
 
     public List<JobOpportunity> getAllJobOpportunities() {
-
         return jobOpportunityRepository.findAll();
     }
 
-    public Optional<JobOpportunity> getJobOpportunityById(String id) {
-        return jobOpportunityRepository.findById(id);
+    public JobOpportunity getJobOpportunityById(String id) {
+        return jobOpportunityRepository.findById(id).orElse(null);
     }
 
     public JobOpportunity createOrUpdateJobOpportunity(JobOpportunity jobOpportunity) {
@@ -44,18 +41,19 @@ public class JobService {
     }
 
     public void acceptJobOpportunity(String jobOpportunityId) {
-        Optional<JobOpportunity> jobOpportunityOptional = jobOpportunityRepository.findById(jobOpportunityId);
-        JobOpportunity jobOpportunity = jobOpportunityOptional.get();
-        jobOpportunity.setAccepted(true);
-        jobOpportunityRepository.save(jobOpportunity);
+        JobOpportunity jobOpportunity = jobOpportunityRepository.findById(jobOpportunityId).orElse(null);
+        if (jobOpportunity != null) {
+            jobOpportunity.setAccepted(true);
+            jobOpportunityRepository.save(jobOpportunity);
+        }
     }
 
     public void cancelApplication(String jobOpportunityId) {
-        Optional<JobOpportunity> jobOpportunityOptional = jobOpportunityRepository.findById(jobOpportunityId);
-        JobOpportunity jobOpportunity = jobOpportunityOptional.get();
-        jobOpportunity.setApplicant(null);
-        jobOpportunityRepository.save(jobOpportunity);
-
+        JobOpportunity jobOpportunity = jobOpportunityRepository.findById(jobOpportunityId).orElse(null);
+        if (jobOpportunity != null) {
+            jobOpportunity.setApplicant(null);
+            jobOpportunityRepository.save(jobOpportunity);
+        }
     }
 }
 

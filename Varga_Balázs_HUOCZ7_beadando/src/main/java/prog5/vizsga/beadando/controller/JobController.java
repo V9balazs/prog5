@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import prog5.vizsga.beadando.entity.JobOpportunity;
 import prog5.vizsga.beadando.service.JobService;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/jobs")
 public class JobController {
@@ -31,10 +29,12 @@ public class JobController {
 
     @GetMapping("/{id}")
     public ResponseEntity<JobOpportunity> getJobById(@PathVariable String id) {
-        Optional<JobOpportunity> jobOpportunity = jobService.getJobOpportunityById(id);
-        return jobOpportunity
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        JobOpportunity jobOpportunity = jobService.getJobOpportunityById(id);
+        if (jobOpportunity == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(jobOpportunity);
+        }
     }
 
     @PostMapping

@@ -1,0 +1,7 @@
+spring:
+  data:
+    mongodb:
+      foreignWork:
+        uri: mongodb://work:work@localhost:27017/foreignWork
+      userDetails:
+        uri: mongodb://work:work@localhost:27017/userDetails

@@ -16,6 +16,7 @@ import jakarta.annotation.security.PermitAll;
 import prog5.vizsga.beadando.entity.JobOpportunity;
 import prog5.vizsga.beadando.helper.ViewHelper;
 import prog5.vizsga.beadando.service.JobService;
+import prog5.vizsga.beadando.service.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,9 +31,11 @@ public class WorkView extends VerticalLayout {
     private boolean isManager;
     private TextField descriptionFilter;
     private TextField locationFilter;
+    private final UserService userService;
 
-    public WorkView(JobService jobService) {
+    public WorkView(JobService jobService, UserService userService) {
         this.jobService = jobService;
+        this.userService = userService;
         isManager = ViewHelper.checkIfUserIsManager();
 
         add(new Span("Logged in: " + ViewHelper.getCurrentUsername()));
@@ -100,9 +103,15 @@ public class WorkView extends VerticalLayout {
             return;
         }
 
-        jobService.applyForJob(jobOpportunity.getId(), ViewHelper.getCurrentUsername());
+        String currentUsername = ViewHelper.getCurrentUsername();
+        String userId = userService.getUserIdFromUsername(currentUsername);
+        String applicantInfo = currentUsername + " (" + userId + ")";
+
+        jobService.applyForJob(jobOpportunity.getId(), applicantInfo);
         updateList();
     }
+
+
 
     private void addNewJobOpportunityButton() {
         Button newJobButton = new Button("New Work", click -> UI.getCurrent().navigate(NewWorkView.class));

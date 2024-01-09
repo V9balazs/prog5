@@ -25,7 +25,7 @@ public class ViewHelper {
             return false;
         }
         return authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_MANAGER"));
+                .anyMatch(authority -> authority.getAuthority().equals("MANAGER"));
     }
 
 }
